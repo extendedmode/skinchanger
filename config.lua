@@ -15,6 +15,9 @@ Config.DefaultItemsToCheck = {
 	['shoes_1'] = 0
 }
 
+-- The message to display to the user if they haven't changed the items listed above
+Config.DefaultMessage = "~r~You cannot join with the default configuration.\n Please change your look!"
+
 -- All the components to show on the menu, they will be displayed in this order
 Config.Components = {
 	-- Body
