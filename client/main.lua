@@ -1,7 +1,5 @@
-local LastSex = -1
-local LoadSkin = nil
-local LoadClothes = nil
-local Character = {}
+local LastSex, Character = -1, {}
+local LoadSkin, LoadClothes = nil, nil
 
 for i=1, #Config.Components, 1 do
 	Character[Config.Components[i].name] = Config.Components[i].value
@@ -21,6 +19,7 @@ function LoadDefaultModel(malePed, cb)
 
 	CreateThread(function()
 		while not HasModelLoaded(characterModel) do
+            RequestModel(characterModel)
 			Wait(0)
 		end
 
@@ -31,7 +30,7 @@ function LoadDefaultModel(malePed, cb)
 
 		SetModelAsNoLongerNeeded(characterModel)
 
-		if cb ~= nil then
+		if cb then
 			cb()
 		end
 
@@ -166,7 +165,6 @@ function ApplySkin(skin, clothes)
 	end
 
 	SetPedHeadBlendData(playerPed, Character['face'], Character['face'], Character['face'], Character['skin'], Character['skin'], Character['skin'], 1.0, 1.0, 1.0, true)
-
 	SetPedHairColor(playerPed, Character['hair_color_1'], Character['hair_color_2']) -- Hair Color
 	SetPedHeadOverlay(playerPed, 3, Character['age_1'],	(Character['age_2'] / 10) + 0.0) -- Age + opacity
 	SetPedHeadOverlay(playerPed, 1,	Character['beard_1'], (Character['beard_2'] / 10) + 0.0) -- Beard + opacity
@@ -340,14 +338,11 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 end)
 
 local playerSpawned = false
-AddEventHandler('playerSpawned', function()
-	playerSpawned = true
-end)
-
+AddEventHandler('playerSpawned', function() playerSpawned = true end)
 CreateThread(function()
-	while true do 
+	while Config.DefaultPrevention do 
 		Wait(0)
-		if Config.DefaultPrevention and playerSpawned then
+		if playerSpawned then
 			local resultDefault = false
 			for item, id in pairs(Config.DefaultItemsToCheck) do
 				if Character[item] == id then
